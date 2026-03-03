@@ -371,7 +371,7 @@
 
   <!-- ── HEADER ── -->
   <header>
-    <div class="logo">TASk<span>FLOW</span> ONLINE</div>
+    <div class="logo">TASK<span>FLOW</span> ONLINE</div>
     <div class="header-right">
       <div class="player-info">
         <div class="player-avatar">🛡️</div>
@@ -387,6 +387,66 @@
     </div>
   </header>
 
+  <!-- Formulario nueva misión -->
+  <div id="form-container" style="
+    background: rgba(4,20,40,0.95);
+    border-bottom: 1px solid #0a3a6e;
+    padding: 16px 40px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    ">
+    <input id="task-input" type="text" placeholder="Nombre de la misión..." style="
+    flex: 1; background: rgba(0,207,255,0.05);
+    border: 1px solid #0a3a6e; border-radius: 4px;
+    padding: 8px 16px; color: #cce8ff;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.95rem;
+    outline: none;
+    "/>
+    <select id="task-category" style="
+    background: rgba(0,207,255,0.05);
+    border: 1px solid #0a3a6e; border-radius: 4px;
+    padding: 8px 12px; color: #cce8ff;
+    font-family: 'Orbitron', sans-serif; font-size: 0.6rem;
+    outline: none; cursor: pointer;
+    ">
+      <option value="⚔️ BOSS FIGHT">⚔️ BOSS FIGHT</option>
+      <option value="💎 RECOLECCIÓN">💎 RECOLECCIÓN</option>
+      <option value="🔬 INVESTIGACIÓN">🔬 INVESTIGACIÓN</option>
+      <option value="🧭 AVENTURA">🧭 AVENTURA</option>
+    </select>
+    <select id="task-priority" style="
+      background: rgba(0,207,255,0.05);
+      border: 1px solid #0a3a6e; border-radius: 4px;
+      padding: 8px 12px; color: #cce8ff;
+      font-family: 'Orbitron', sans-serif; font-size: 0.6rem;
+      outline: none; cursor: pointer;
+    ">
+      <option value="urgente">URGENTE</option>
+      <option value="normal">NORMAL</option>
+      <option value="secundaria">SECUNDARIA</option>
+    </select>
+    <button id="add-btn" style="
+      font-family: 'Orbitron', sans-serif; font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 2px; padding: 8px 20px;
+      background: rgba(0,207,255,0.12); color: #00cfff;
+      border: 1px solid #00cfff; border-radius: 4px;
+      cursor: pointer;
+    ">+ AÑADIR</button>
+  </div>
+
+  <!-- Buscador -->
+  <div style="padding: 10px 40px; background: rgba(2,11,24,0.8); border-bottom: 1px solid #0a3a6e;">
+   <input id="search-input" type="text" placeholder="🔍  Buscar misión..." style="
+     width: 100%; max-width: 400px;
+     background: rgba(0,207,255,0.03);
+     border: 1px solid #0a3a6e; border-radius: 4px;
+     padding: 6px 14px; color: #cce8ff;
+     font-family: 'Rajdhani', sans-serif; font-size: 0.9rem;
+     outline: none;
+    "/>
+  </div>
+   
   <div class="app-body">
 
     <!-- ── ASIDE ── -->
@@ -454,7 +514,7 @@
 <!-- Pendientes -->
       <section>
         <h2>MISIONES ACTIVAS</h2>
-        <div class="task-list">
+        <div class="task-list" id="active-list">
 
           <div class="task-card">
             <div class="task-check"><span class="check-icon">✓</span></div>
@@ -507,7 +567,7 @@
       <!-- Completadas -->
       <section>
         <h2>MISIONES COMPLETADAS</h2>
-        <div class="task-list">
+        <div class="task-list" id="done-list">
 
           <div class="task-card done">
             <div class="task-check"><span class="check-icon">✓</span></div>
@@ -540,6 +600,6 @@
       </section>
     </main>
   </div>
-
+ <script src="app.js"></script>
 </body>
 </html>
