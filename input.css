@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html.dark body {
+    background-color: #020b18;
+    color: #cce8ff;
+  }
+
+  html:not(.dark) body {
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+  }
+
+  html:not(.dark) header {
+    background-color: #16213e;
+    border-color: #0f3460;
+  }
+
+  html:not(.dark) aside {
+    background-color: #16213e;
+    border-color: #0f3460;
+  }
+}

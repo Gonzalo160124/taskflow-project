@@ -1,0 +1,24 @@
+{
+  "name": "taskflow-project",
+  "version": "1.0.0",
+  "description": "Mi primer proyecto de practicas.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gonzalo160124/taskflow-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Gonzalo160124/taskflow-project/issues"
+  },
+  "homepage": "https://github.com/Gonzalo160124/taskflow-project#readme",
+  "devDependencies": {
+    "tailwindcss": "^4.2.1"
+  }
+}

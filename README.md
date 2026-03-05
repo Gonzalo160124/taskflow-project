@@ -4,19 +4,20 @@ Mi primer proyecto de practicas.
 Link de la página creada en la segunda actividad: https://taskflow-project-beige.vercel.app/
 
 BONUS descripción de la 3º Actividad:
+
 # TASKFLOW ONLINE ⚔️
 
-Aplicación web de gestión de tareas con temática de Sword Art Online (SAO).
+Aplicación web de gestión de tareas con temática de videojuego o mundo virtual como en los animes "Sword Art Online" o "Log Horizon" .
 
 ## 🎮 Descripción
 
-TaskFlow Online es una app que permite gestionar misiones al estilo MMORPG. Puedes añadir, completar y eliminar tareas organizadas por categoría y prioridad, con persistencia de datos en el navegador.
+TaskFlow Online es una app que permite gestionar objetivos (cualquier tipo) al estilo MMORPG. Puedes añadir, completar y eliminar tareas organizadas por categoría y prioridad, con persistencia de datos en el navegador.
 
-## 🚀 Demo
+## 🚀 Aplicación
 
-🔗 [Ver aplicación en Vercel](https://taskflow-project-beige.vercel.app)
+🔗 [Link gracias a la web Vercel] (https://taskflow-project-beige.vercel.app)
 
-## ✨ Funcionalidades
+## ✨ ¿Que puedes hacer por ahora?
 
 - Añadir nuevas misiones con categoría y prioridad
 - Marcar misiones como completadas
@@ -32,17 +33,15 @@ taskflow-project/
 └── README.md    → Documentación
 ```
 
-## 🛠️ Tecnologías
+## 🛠️ Tecnologías usadas para hacer esta Web/app
 
 - HTML5
 - CSS3 (Variables, Flexbox, Media Queries)
 - JavaScript (DOM, LocalStorage)
 - Desplegado en Vercel
 
-## 📦 Categorías de misiones
+## 📦 Categorías de las misiones que puedes hacer
 
-| Categoría | Descripción |
-|-----------|-------------|
 | ⚔️ Boss Fight | Enfrentamiento contra jefes |
 | 💎 Recolección | Recoger objetos o materiales |
 | 🔬 Investigación | Explorar y descubrir información |

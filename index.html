@@ -1,605 +1,188 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="output.css"/>
   <title>TaskFlow — SAO Edition</title>
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --color-bg:       #020b18;
-      --color-surface:  #041428;
-      --color-border:   #0a3a6e;
-      --color-accent:   #00cfff;
-      --color-accent2:  #ff4e6a;
-      --color-accent3:  #ffe066;
-      --color-text:     #cce8ff;
-      --color-muted:    #3a6a99;
-      --font-display:   'Orbitron', sans-serif;
-      --font-body:      'Rajdhani', sans-serif;
-      --space-sm: 8px; --space-md: 16px;
-      --space-lg: 24px; --space-xl: 40px;
-      --radius-sm: 4px; --radius-md: 8px;
-      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background: var(--color-bg);
-      color: var(--color-text);
-      font-family: var(--font-body);
-      font-size: 15px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      /* Rejilla de fondo estilo HUD */
-      background-image:
-        linear-gradient(rgba(0,207,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,207,255,0.03) 1px, transparent 1px);
-      background-size: 40px 40px;
-    }
-
-    /* ── Scanline overlay ── */
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,0.08) 2px,
-        rgba(0,0,0,0.08) 4px
-      );
-      pointer-events: none;
-      z-index: 100;
-    }
-
-    /* ── Header ── */
-    header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: var(--space-md) var(--space-xl);
-      border-bottom: 1px solid var(--color-border);
-      background: rgba(4, 20, 40, 0.95);
-      backdrop-filter: blur(10px);
-      position: sticky; top: 0; z-index: 10;
-      box-shadow: 0 0 30px rgba(0,207,255,0.1);
-    }
-
-    .logo {
-      font-family: var(--font-display);
-      font-weight: 900; font-size: 1.3rem;
-      letter-spacing: 3px; text-transform: uppercase;
-      color: var(--color-accent);
-      text-shadow: 0 0 20px rgba(0,207,255,0.8), 0 0 40px rgba(0,207,255,0.4);
-    }
-
-    .logo span { color: #fff; }
-
-    .header-right {
-      display: flex; align-items: center; gap: var(--space-lg);
-    }
-
-    .player-info {
-      display: flex; align-items: center; gap: var(--space-sm);
-      font-family: var(--font-display); font-size: 0.65rem;
-      letter-spacing: 1px; color: var(--color-muted);
-    }
-
-    .player-avatar {
-      width: 32px; height: 32px; border-radius: 50%;
-      border: 2px solid var(--color-accent);
-      background: linear-gradient(135deg, #0a3a6e, #00cfff33);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px;
-      box-shadow: 0 0 10px rgba(0,207,255,0.5);
-    }
-
-    .player-name { color: var(--color-text); font-size: 0.75rem; }
-    .player-level { color: var(--color-accent3); }
-
-    .header-actions { display: flex; gap: var(--space-sm); }
-
-    .btn {
-      font-family: var(--font-display); font-size: 0.65rem; font-weight: 700;
-      letter-spacing: 2px; text-transform: uppercase;
-      padding: var(--space-sm) var(--space-md);
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--color-border);
-      background: transparent; color: var(--color-muted);
-      cursor: pointer;
-      transition: all var(--transition);
-      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-    }
-
-    .btn:hover {
-      border-color: var(--color-accent); color: var(--color-accent);
-      background: rgba(0,207,255,0.08);
-      box-shadow: 0 0 15px rgba(0,207,255,0.3);
-    }
-
-    .btn-primary {
-      background: rgba(0,207,255,0.12); color: var(--color-accent);
-      border-color: var(--color-accent);
-      box-shadow: 0 0 10px rgba(0,207,255,0.2);
-    }
-
-    .btn-primary:hover {
-      background: rgba(0,207,255,0.25);
-      box-shadow: 0 0 25px rgba(0,207,255,0.5);
-    }
-
-    /* ── Layout ── */
-    .app-body { display: flex; flex: 1; }
-
-    /* ── Aside ── */
-    aside {
-      width: 230px; min-width: 230px;
-      background: rgba(4,20,40,0.8);
-      border-right: 1px solid var(--color-border);
-      padding: var(--space-lg) var(--space-md);
-      display: flex; flex-direction: column; gap: var(--space-lg);
-    }
-
-    .sidebar-section h3 {
-      font-family: var(--font-display); font-size: 0.6rem; font-weight: 700;
-      letter-spacing: 3px; text-transform: uppercase; color: var(--color-muted);
-      margin-bottom: var(--space-sm);
-      border-bottom: 1px solid var(--color-border);
-      padding-bottom: var(--space-sm);
-    }
-
-    .nav-item {
-      display: flex; align-items: center; gap: var(--space-sm);
-      padding: var(--space-sm) var(--space-sm);
-      cursor: pointer; color: var(--color-muted); font-size: 0.9rem;
-      font-family: var(--font-body); font-weight: 500;
-      letter-spacing: 1px; border-radius: var(--radius-sm);
-      transition: all var(--transition);
-      border-left: 2px solid transparent;
-    }
-
-    .nav-item:hover, .nav-item.active {
-      color: var(--color-accent); border-left-color: var(--color-accent);
-      background: rgba(0,207,255,0.05);
-      text-shadow: 0 0 10px rgba(0,207,255,0.5);
-    }
-
-    .nav-icon { font-size: 16px; }
-
-    /* Barra de HP/XP */
-    .player-stats { padding: var(--space-sm) 0; }
-
-    .stat-bar-row {
-      display: flex; align-items: center; gap: var(--space-sm);
-      margin-bottom: var(--space-sm);
-    }
-
-    .stat-bar-label {
-      font-family: var(--font-display); font-size: 0.6rem; font-weight: 700;
-      letter-spacing: 1px; width: 30px; color: var(--color-muted);
-    }
-
-    .stat-bar-track {
-      flex: 1; height: 6px; background: rgba(255,255,255,0.05);
-      border-radius: 3px; overflow: hidden;
-      border: 1px solid var(--color-border);
-    }
-
-    .stat-bar-fill {
-      height: 100%; border-radius: 3px;
-      transition: width var(--transition);
-    }
-
-    .hp-fill   { background: linear-gradient(90deg, #ff4e6a, #ff8fa0); width: 72%; box-shadow: 0 0 6px #ff4e6a; }
-    .xp-fill   { background: linear-gradient(90deg, #ffe066, #fff0a0); width: 45%; box-shadow: 0 0 6px #ffe066; }
-    .mana-fill { background: linear-gradient(90deg, #00cfff, #66e5ff); width: 88%; box-shadow: 0 0 6px #00cfff; }
-
-    .stat-bar-val { font-family: var(--font-display); font-size: 0.55rem; color: var(--color-muted); width: 55px; text-align: right; white-space: nowrap; }
-
-    .tag-chip {
-      display: inline-flex; gap: 5px; padding: 3px 10px; border-radius: 3px;
-      font-size: 0.75rem; font-family: var(--font-display);
-      border: 1px solid var(--color-border); color: var(--color-muted);
-      cursor: pointer; margin: 3px 2px; letter-spacing: 1px;
-      transition: all var(--transition);
-      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
-    }
-
-    .tag-chip:hover { border-color: var(--color-accent); color: var(--color-accent); background: rgba(0,207,255,0.05); }
-
-    /* ── Main ── */
-    main { flex: 1; padding: var(--space-xl); overflow-y: auto; }
-
-    .main-header {
-      display: flex; align-items: flex-start; justify-content: space-between;
-      margin-bottom: var(--space-xl);
-    }
-
-
-    .main-title-label {
-      font-family: var(--font-display); font-size: 0.6rem; font-weight: 700;
-      letter-spacing: 4px; text-transform: uppercase; color: var(--color-muted);
-      margin-bottom: 6px;
-    }
-
-    .main-header h1 {
-      font-family: var(--font-display); font-size: 1.8rem; font-weight: 900;
-      text-transform: uppercase; letter-spacing: 4px;
-      color: var(--color-text);
-      text-shadow: 0 0 30px rgba(0,207,255,0.4);
-    }
-
-    .main-header h1 em { font-style: normal; color: var(--color-accent); text-shadow: 0 0 20px rgba(0,207,255,1); }
-
-    .stats {
-      display: flex; gap: var(--space-md);
-    }
-
-    .stat-card {
-      background: rgba(4,20,40,0.8); border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm); padding: var(--space-sm) var(--space-md);
-      text-align: center; min-width: 70px;
-      clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
-    }
-
-    .stat-number { font-family: var(--font-display); font-size: 1.5rem; font-weight: 900; color: var(--color-accent); line-height: 1; text-shadow: 0 0 15px rgba(0,207,255,0.8); }
-    .stat-label { font-family: var(--font-display); font-size: 0.55rem; color: var(--color-muted); text-transform: uppercase; letter-spacing: 1px; }
-
-    /* ── Sections ── */
-    section { margin-bottom: var(--space-xl); }
-
-    section h2 {
-      font-family: var(--font-display); font-size: 0.65rem; font-weight: 700;
-      letter-spacing: 4px; text-transform: uppercase; color: var(--color-accent);
-      margin-bottom: var(--space-md);
-      display: flex; align-items: center; gap: var(--space-sm);
-    }
-
-    section h2::after {
-      content: ''; flex: 1; height: 1px;
-      background: linear-gradient(90deg, var(--color-border), transparent);
-    }
-
-    /* ── Task Cards ── */
-    .task-list { display: flex; flex-direction: column; gap: var(--space-sm); }
-
-    .task-card {
-      display: flex; align-items: center; gap: var(--space-md);
-      background: rgba(4,20,40,0.7);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm);
-      padding: var(--space-md) var(--space-lg);
-      cursor: pointer;
-      clip-path: polygon(16px 0%, 100% 0%, calc(100% - 16px) 100%, 0% 100%);
-      /* Bonus: transición suave de estado */
-      transition: all var(--transition);
-      position: relative;
-    }
-
-    .task-card::before {
-      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-      width: 3px; background: var(--color-border);
-      transition: background var(--transition), box-shadow var(--transition);
-    }
-
-    .task-card:hover {
-      border-color: var(--color-accent);
-      background: rgba(0,207,255,0.05);
-      transform: translateX(4px);
-      box-shadow: 0 0 20px rgba(0,207,255,0.15), inset 0 0 20px rgba(0,207,255,0.02);
-    }
-
-    .task-card:hover::before {
-      background: var(--color-accent);
-      box-shadow: 0 0 10px var(--color-accent);
-    }
-
-    .task-card.done {
-      opacity: 0.35;
-      border-color: transparent;
-    }
-
-    .task-card.done::before { background: var(--color-muted); box-shadow: none; }
-    .task-card.done .task-title { text-decoration: line-through; color: var(--color-muted); }
-
-    .task-check {
-      width: 22px; height: 22px;
-      border: 2px solid var(--color-border);
-      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-display); font-size: 10px; color: var(--color-bg);
-      clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
-      transition: all var(--transition);
-    }
-
-    .task-card:hover .task-check { border-color: var(--color-accent); box-shadow: 0 0 8px rgba(0,207,255,0.5); }
-    .task-card.done .task-check { background: var(--color-accent); border-color: var(--color-accent); }
-    .check-icon { display: none; }
-    .task-card.done .check-icon { display: block; }
-
-    .task-info { flex: 1; display: flex; align-items: center; gap: var(--space-md); flex-wrap: wrap; }
-
-    .task-title { font-weight: 600; font-size: 0.95rem; letter-spacing: 0.5px; transition: color var(--transition); }
-
-    .task-category {
-      font-family: var(--font-display); font-size: 0.6rem; color: var(--color-muted);
-      padding: 2px 8px; letter-spacing: 1px;
-      background: rgba(255,255,255,0.03); border: 1px solid var(--color-border);
-      clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
-    }
-
-    .badge {
-      font-family: var(--font-display); font-size: 0.6rem; font-weight: 700;
-      letter-spacing: 2px; padding: 3px 10px; text-transform: uppercase;
-      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
-    }
-
-    .badge-alta  { background: rgba(255,78,106,0.15); color: var(--color-accent2); border: 1px solid rgba(255,78,106,0.4); }
-    .badge-media { background: rgba(255,224,102,0.12); color: var(--color-accent3); border: 1px solid rgba(255,224,102,0.3); }
-    .badge-baja  { background: rgba(0,207,255,0.1);   color: var(--color-accent);  border: 1px solid rgba(0,207,255,0.25); }
-
-
-    /* ── Media Queries ── */
-    @media (max-width: 768px) {
-      header { padding: var(--space-md); }
-      .player-info .player-name, .player-info .player-level { display: none; }
-      .app-body { flex-direction: column; }
-      aside {
-        width: 100%; min-width: unset;
-        border-right: none; border-bottom: 1px solid var(--color-border);
-        flex-direction: row; flex-wrap: wrap;
-        padding: var(--space-md); gap: var(--space-md);
-      }
-      .sidebar-section { min-width: 140px; }
-      .player-stats { display: none; }
-      main { padding: var(--space-md); }
-      .main-header { flex-direction: column; align-items: flex-start; gap: var(--space-md); }
-      .main-header h1 { font-size: 1.2rem; }
-      .task-date { display: none; }
-      .task-card { clip-path: none; }
-    }
-
-    @media (max-width: 480px) {
-      .logo { font-size: 1rem; letter-spacing: 1px; }
-      .stats { gap: var(--space-sm); }
-      .stat-number { font-size: 1.1rem; }
-      .stat-card { clip-path: none; }
-    }
-  </style>
 </head>
-<body>
+<body class="bg-sao-bg text-sao-text font-body text-[15px] min-h-screen flex flex-col">
+
+  <!-- Scanline overlay -->
+  <div class="fixed inset-0 pointer-events-none z-50" style="background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);"></div>
+
+  <!-- Rejilla de fondo -->
+  <div class="fixed inset-0 pointer-events-none" style="background-image: linear-gradient(rgba(0,207,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,207,255,0.03) 1px, transparent 1px); background-size: 40px 40px;"></div>
 
   <!-- ── HEADER ── -->
-  <header>
-    <div class="logo">TASK<span>FLOW</span> ONLINE</div>
-    <div class="header-right">
-      <div class="player-info">
-        <div class="player-avatar">🛡️</div>
+  <header class="flex items-center justify-between px-10 py-4 border-b border-sao-border bg-sao-surface/95 backdrop-blur sticky top-0 z-10 shadow-[0_0_30px_rgba(0,207,255,0.1)]">
+    <div class="font-display font-black text-xl tracking-widest uppercase text-sao-accent" style="text-shadow: 0 0 20px rgba(0,207,255,0.8)">
+      TASK<span class="text-white">FLOW</span> ONLINE
+    </div>
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-2 font-display text-[0.65rem] tracking-wide text-sao-muted">
+        <div class="w-8 h-8 rounded-full border-2 border-sao-accent bg-gradient-to-br from-sao-border to-sao-accent/20 flex items-center justify-center text-sm shadow-[0_0_10px_rgba(0,207,255,0.5)]">🛡️</div>
         <div>
-          <div class="player-name">Gonzalo</div>
-          <div class="player-level">LVL 80 · Tank</div>
+          <div class="text-sao-text text-[0.75rem]">Gonzalo</div>
+          <div class="text-sao-yellow">LVL 80 · Tank</div>
         </div>
       </div>
-      <div class="header-actions">
-        <button class="btn"> ATRIBUTOS</button>
-        <button class="btn btn-primary"> NUEVA MISIÓN</button>
+      <div class="flex gap-2">
+        <!-- Botón modo oscuro -->
+        <button id="theme-toggle" onclick="document.documentElement.classList.toggle('dark')"
+          class="font-display text-[0.65rem] font-bold tracking-widest uppercase px-4 py-2 rounded border border-sao-border bg-transparent text-sao-muted cursor-pointer transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/10 hover:shadow-[0_0_15px_rgba(0,207,255,0.3)] focus:outline-none focus:ring-2 focus:ring-sao-accent">
+          🌙 TEMA
+        </button>
+        <button class="font-display text-[0.65rem] font-bold tracking-widest uppercase px-4 py-2 rounded border border-sao-border bg-transparent text-sao-muted cursor-pointer transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/10 hover:shadow-[0_0_15px_rgba(0,207,255,0.3)] focus:outline-none focus:ring-2 focus:ring-sao-accent">
+          ATRIBUTOS
+        </button>
+        <button class="font-display text-[0.65rem] font-bold tracking-widest uppercase px-4 py-2 rounded border border-sao-accent bg-sao-accent/10 text-sao-accent cursor-pointer transition-all duration-300 hover:bg-sao-accent/25 hover:shadow-[0_0_25px_rgba(0,207,255,0.5)] focus:outline-none focus:ring-2 focus:ring-sao-accent">
+          NUEVA MISIÓN
+        </button>
       </div>
     </div>
   </header>
 
   <!-- Formulario nueva misión -->
-  <div id="form-container" style="
-    background: rgba(4,20,40,0.95);
-    border-bottom: 1px solid #0a3a6e;
-    padding: 16px 40px;
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    ">
-    <input id="task-input" type="text" placeholder="Nombre de la misión..." style="
-    flex: 1; background: rgba(0,207,255,0.05);
-    border: 1px solid #0a3a6e; border-radius: 4px;
-    padding: 8px 16px; color: #cce8ff;
-    font-family: 'Rajdhani', sans-serif; font-size: 0.95rem;
-    outline: none;
-    "/>
-    <select id="task-category" style="
-    background: rgba(0,207,255,0.05);
-    border: 1px solid #0a3a6e; border-radius: 4px;
-    padding: 8px 12px; color: #cce8ff;
-    font-family: 'Orbitron', sans-serif; font-size: 0.6rem;
-    outline: none; cursor: pointer;
-    ">
+  <div class="bg-sao-surface/95 border-b border-sao-border px-10 py-4 flex gap-3 items-center">
+    <input id="task-input" type="text" placeholder="Nombre de la misión..."
+      class="flex-1 bg-sao-accent/5 border border-sao-border rounded px-4 py-2 text-sao-text font-body text-[0.95rem] outline-none transition-all duration-300 hover:border-sao-accent focus:border-sao-accent focus:ring-2 focus:ring-sao-accent/30"/>
+    <select id="task-category"
+      class="bg-sao-surface border border-sao-border rounded px-3 py-2 text-sao-text font-display text-[0.6rem] outline-none cursor-pointer transition-all duration-300 hover:border-sao-accent focus:border-sao-accent focus:ring-2 focus:ring-sao-accent/30">
       <option value="⚔️ BOSS FIGHT">⚔️ BOSS FIGHT</option>
       <option value="💎 RECOLECCIÓN">💎 RECOLECCIÓN</option>
       <option value="🔬 INVESTIGACIÓN">🔬 INVESTIGACIÓN</option>
       <option value="🧭 AVENTURA">🧭 AVENTURA</option>
     </select>
-    <select id="task-priority" style="
-      background: rgba(0,207,255,0.05);
-      border: 1px solid #0a3a6e; border-radius: 4px;
-      padding: 8px 12px; color: #cce8ff;
-      font-family: 'Orbitron', sans-serif; font-size: 0.6rem;
-      outline: none; cursor: pointer;
-    ">
+    <select id="task-priority"
+      class="bg-sao-surface border border-sao-border rounded px-3 py-2 text-sao-text font-display text-[0.6rem] outline-none cursor-pointer transition-all duration-300 hover:border-sao-accent focus:border-sao-accent focus:ring-2 focus:ring-sao-accent/30">
       <option value="urgente">URGENTE</option>
       <option value="normal">NORMAL</option>
       <option value="secundaria">SECUNDARIA</option>
     </select>
-    <button id="add-btn" style="
-      font-family: 'Orbitron', sans-serif; font-size: 0.65rem; font-weight: 700;
-      letter-spacing: 2px; padding: 8px 20px;
-      background: rgba(0,207,255,0.12); color: #00cfff;
-      border: 1px solid #00cfff; border-radius: 4px;
-      cursor: pointer;
-    ">+ AÑADIR</button>
+    <button id="add-btn"
+      class="font-display text-[0.65rem] font-bold tracking-widest uppercase px-5 py-2 bg-sao-accent/10 text-sao-accent border border-sao-accent rounded cursor-pointer transition-all duration-300 hover:bg-sao-accent/25 hover:shadow-[0_0_25px_rgba(0,207,255,0.5)] focus:outline-none focus:ring-2 focus:ring-sao-accent">
+      + AÑADIR
+    </button>
   </div>
 
   <!-- Buscador -->
-  <div style="padding: 10px 40px; background: rgba(2,11,24,0.8); border-bottom: 1px solid #0a3a6e;">
-   <input id="search-input" type="text" placeholder="🔍  Buscar misión..." style="
-     width: 100%; max-width: 400px;
-     background: rgba(0,207,255,0.03);
-     border: 1px solid #0a3a6e; border-radius: 4px;
-     padding: 6px 14px; color: #cce8ff;
-     font-family: 'Rajdhani', sans-serif; font-size: 0.9rem;
-     outline: none;
-    "/>
+  <div class="px-10 py-3 bg-sao-bg/80 border-b border-sao-border">
+    <input id="search-input" type="text" placeholder="🔍  Buscar misión..."
+      class="w-full max-w-md bg-sao-accent/5 border border-sao-border rounded px-4 py-2 text-sao-text font-body text-[0.9rem] outline-none transition-all duration-300 hover:border-sao-accent focus:border-sao-accent focus:ring-2 focus:ring-sao-accent/30"/>
   </div>
-   
-  <div class="app-body">
+
+  <div class="flex flex-1">
 
     <!-- ── ASIDE ── -->
-    <aside>
-      <div class="sidebar-section">
-        <h3>// MENÚ</h3>
-        <div class="nav-item active"><span class="nav-icon">📋</span> Todas las misiones</div>
-        <div class="nav-item"><span class="nav-icon">⚡</span> Hoy</div>
-        <div class="nav-item"><span class="nav-icon">🗓️</span> Esta semana</div>
-        <div class="nav-item"><span class="nav-icon">✅</span> Completadas</div>
-        <div class="nav-item"><span class="nav-icon">⏳</span> Por completar</div>
-      </div>
+    <aside class="w-56 min-w-[230px] bg-sao-surface/80 border-r border-sao-border px-4 py-6 flex flex-col gap-6">
 
-      <div class="sidebar-section player-stats">
-        <h3>// STATS</h3>
-        <div class="stat-bar-row">
-          <span class="stat-bar-label">HP</span>
-          <div class="stat-bar-track"><div class="stat-bar-fill hp-fill"></div></div>
-          <span class="stat-bar-val">2400/3000</span>
-        </div>
-        <div class="stat-bar-row">
-          <span class="stat-bar-label">MP</span>
-          <div class="stat-bar-track"><div class="stat-bar-fill mana-fill"></div></div>
-          <span class="stat-bar-val">880/1000</span>
-        </div>
-        <div class="stat-bar-row">
-          <span class="stat-bar-label">XP</span>
-          <div class="stat-bar-track"><div class="stat-bar-fill xp-fill"></div></div>
-          <span class="stat-bar-val">4500/9999</span>
+      <div>
+        <h3 class="font-display text-[0.6rem] font-bold tracking-[3px] uppercase text-sao-muted mb-2 border-b border-sao-border pb-2">// MENÚ</h3>
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center gap-2 px-2 py-2 cursor-pointer text-sao-accent border-l-2 border-sao-accent bg-sao-accent/5 font-body font-medium text-[0.9rem] tracking-wide rounded transition-all duration-300">
+            <span>📋</span> Todas las misiones
+          </div>
+          <div class="flex items-center gap-2 px-2 py-2 cursor-pointer text-sao-muted border-l-2 border-transparent font-body font-medium text-[0.9rem] tracking-wide rounded transition-all duration-300 hover:text-sao-accent hover:border-sao-accent hover:bg-sao-accent/5">
+            <span>⚡</span> Hoy
+          </div>
+          <div class="flex items-center gap-2 px-2 py-2 cursor-pointer text-sao-muted border-l-2 border-transparent font-body font-medium text-[0.9rem] tracking-wide rounded transition-all duration-300 hover:text-sao-accent hover:border-sao-accent hover:bg-sao-accent/5">
+            <span>🗓️</span> Esta semana
+          </div>
+          <div class="flex items-center gap-2 px-2 py-2 cursor-pointer text-sao-muted border-l-2 border-transparent font-body font-medium text-[0.9rem] tracking-wide rounded transition-all duration-300 hover:text-sao-accent hover:border-sao-accent hover:bg-sao-accent/5">
+            <span>✅</span> Completadas
+          </div>
+          <div class="flex items-center gap-2 px-2 py-2 cursor-pointer text-sao-muted border-l-2 border-transparent font-body font-medium text-[0.9rem] tracking-wide rounded transition-all duration-300 hover:text-sao-accent hover:border-sao-accent hover:bg-sao-accent/5">
+            <span>⏳</span> Por completar
+          </div>
         </div>
       </div>
 
-      <div class="sidebar-section">
-        <h3>// CATEGORÍAS</h3>
-        <span class="tag-chip">⚔️ Boss Fight</span>
-        <span class="tag-chip">💎 Recolección</span>
-        <span class="tag-chip">🔬 Investigación</span>
-        <span class="tag-chip">🧭 Aventura</span>
+      <div>
+        <h3 class="font-display text-[0.6rem] font-bold tracking-[3px] uppercase text-sao-muted mb-2 border-b border-sao-border pb-2">// STATS</h3>
+        <div class="flex flex-col gap-2 py-2">
+          <div class="flex items-center gap-2">
+            <span class="font-display text-[0.6rem] font-bold tracking-wide w-8 text-sao-muted">HP</span>
+            <div class="flex-1 h-1.5 bg-white/5 rounded border border-sao-border overflow-hidden">
+              <div class="h-full w-[72%] rounded" style="background: linear-gradient(90deg, #ff4e6a, #ff8fa0); box-shadow: 0 0 6px #ff4e6a;"></div>
+            </div>
+            <span class="font-display text-[0.55rem] text-sao-muted w-14 text-right whitespace-nowrap">2400/3000</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="font-display text-[0.6rem] font-bold tracking-wide w-8 text-sao-muted">MP</span>
+            <div class="flex-1 h-1.5 bg-white/5 rounded border border-sao-border overflow-hidden">
+              <div class="h-full w-[88%] rounded" style="background: linear-gradient(90deg, #00cfff, #66e5ff); box-shadow: 0 0 6px #00cfff;"></div>
+            </div>
+            <span class="font-display text-[0.55rem] text-sao-muted w-14 text-right whitespace-nowrap">880/1000</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="font-display text-[0.6rem] font-bold tracking-wide w-8 text-sao-muted">XP</span>
+            <div class="flex-1 h-1.5 bg-white/5 rounded border border-sao-border overflow-hidden">
+              <div class="h-full w-[45%] rounded" style="background: linear-gradient(90deg, #ffe066, #fff0a0); box-shadow: 0 0 6px #ffe066;"></div>
+            </div>
+            <span class="font-display text-[0.55rem] text-sao-muted w-14 text-right whitespace-nowrap">4500/9999</span>
+          </div>
+        </div>
       </div>
+
+      <div>
+        <h3 class="font-display text-[0.6rem] font-bold tracking-[3px] uppercase text-sao-muted mb-2 border-b border-sao-border pb-2">// CATEGORÍAS</h3>
+        <div class="flex flex-wrap gap-1 mt-1">
+          <span class="inline-flex gap-1 px-2 py-1 rounded text-[0.75rem] font-display border border-sao-border text-sao-muted cursor-pointer tracking-wide transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/5">⚔️ Boss Fight</span>
+          <span class="inline-flex gap-1 px-2 py-1 rounded text-[0.75rem] font-display border border-sao-border text-sao-muted cursor-pointer tracking-wide transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/5">💎 Recolección</span>
+          <span class="inline-flex gap-1 px-2 py-1 rounded text-[0.75rem] font-display border border-sao-border text-sao-muted cursor-pointer tracking-wide transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/5">🔬 Investigación</span>
+          <span class="inline-flex gap-1 px-2 py-1 rounded text-[0.75rem] font-display border border-sao-border text-sao-muted cursor-pointer tracking-wide transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/5">🧭 Aventura</span>
+        </div>
+      </div>
+
     </aside>
 
     <!-- ── MAIN ── -->
-    <main>
-      <div class="main-header">
-        <div class="main-title-block">
-          <div class="main-title-label">// SISTEMA DE MISIONES</div>
-          <h1>MIS <em>MISIONES</em></h1>
+    <main class="flex-1 p-10 overflow-y-auto">
+
+      <div class="flex items-start justify-between mb-10">
+        <div>
+          <div class="font-display text-[0.6rem] font-bold tracking-[4px] uppercase text-sao-muted mb-1">// SISTEMA DE MISIONES</div>
+          <h1 class="font-display text-3xl font-black uppercase tracking-widest text-sao-text" style="text-shadow: 0 0 30px rgba(0,207,255,0.4)">
+            MIS <em class="not-italic text-sao-accent" style="text-shadow: 0 0 20px rgba(0,207,255,1)">MISIONES</em>
+          </h1>
         </div>
-        <div class="stats">
-          <div class="stat-card">
-            <div class="stat-number">1200</div>
-            <div class="stat-label">Total</div>
+        <div class="flex gap-4">
+          <div class="bg-sao-surface/80 border border-sao-border rounded px-4 py-2 text-center min-w-[70px]">
+            <div id="count-total" class="font-display text-2xl font-black text-sao-accent" style="text-shadow: 0 0 15px rgba(0,207,255,0.8)">0</div>
+            <div class="font-display text-[0.55rem] text-sao-muted uppercase tracking-wide">Total</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-number">5</div>
-            <div class="stat-label">Activas</div>
+          <div class="bg-sao-surface/80 border border-sao-border rounded px-4 py-2 text-center min-w-[70px]">
+            <div id="count-active" class="font-display text-2xl font-black text-sao-accent" style="text-shadow: 0 0 15px rgba(0,207,255,0.8)">0</div>
+            <div class="font-display text-[0.55rem] text-sao-muted uppercase tracking-wide">Activas</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-number">574</div>
-            <div class="stat-label">Done</div>
+          <div class="bg-sao-surface/80 border border-sao-border rounded px-4 py-2 text-center min-w-[70px]">
+            <div id="count-done" class="font-display text-2xl font-black text-sao-accent" style="text-shadow: 0 0 15px rgba(0,207,255,0.8)">0</div>
+            <div class="font-display text-[0.55rem] text-sao-muted uppercase tracking-wide">Done</div>
           </div>
         </div>
       </div>
 
-<!-- Pendientes -->
-      <section>
-        <h2>MISIONES ACTIVAS</h2>
-        <div class="task-list" id="active-list">
-
-          <div class="task-card">
-            <div class="task-check"><span class="check-icon">✓</span></div>
-            <div class="task-info">
-              <span class="task-title">Derrota al jefe del piso 75</span>
-              <span class="task-category">⚔️ BOSS FIGHT</span>
-              <span class="badge badge-alta">URGENTE</span>
-            </div>
-          </div>
-
-          <div class="task-card">
-            <div class="task-check"><span class="check-icon">✓</span></div>
-            <div class="task-info">
-              <span class="task-title">Recolecta 20 cristales oscuros del piso 64</span>
-              <span class="task-category">💎 RECOLECCIÓN</span>
-              <span class="badge badge-media">NORMAL</span>
-            </div>
-          </div>
-
-          <div class="task-card">
-            <div class="task-check"><span class="check-icon">✓</span></div>
-            <div class="task-info">
-              <span class="task-title">Investiga el origen de las ruinas del piso 75</span>
-              <span class="task-category">🔬 INVESTIGACIÓN</span>
-              <span class="badge badge-media">NORMAL</span>
-            </div>
-          </div>
-
-          <div class="task-card">
-            <div class="task-check"><span class="check-icon">✓</span></div>
-            <div class="task-info">
-              <span class="task-title">Ayuda a NPC perdido a encontrar su aldea</span>
-              <span class="task-category">🧭 AVENTURA</span>
-              <span class="badge badge-baja">SECUNDARIA</span>
-            </div>
-          </div>
-
-          <div class="task-card">
-            <div class="task-check"><span class="check-icon">✓</span></div>
-            <div class="task-info">
-              <span class="task-title">Elimina a los golems guardianes de las ruinas del piso 75</span>
-              <span class="task-category">⚔️ BOSS FIGHT</span>
-              <span class="badge badge-alta">URGENTE</span>
-            </div>
-          </div>
-
-        </div>
+      <!-- Misiones activas -->
+      <section class="mb-10">
+        <h2 class="font-display text-[0.65rem] font-bold tracking-[4px] uppercase text-sao-accent mb-4 flex items-center gap-2 after:flex-1 after:h-px after:bg-gradient-to-r after:from-sao-border after:to-transparent">
+          MISIONES ACTIVAS
+        </h2>
+        <div id="active-list" class="flex flex-col gap-2"></div>
       </section>
 
-      <!-- Completadas -->
-      <section>
-        <h2>MISIONES COMPLETADAS</h2>
-        <div class="task-list" id="done-list">
-
-          <div class="task-card done">
-            <div class="task-check"><span class="check-icon">✓</span></div>
-            <div class="task-info">
-              <span class="task-title">Derrota al jefe del piso F74</span>
-              <span class="task-category">⚔️ BOSS FIGHT</span>
-              <span class="badge badge-alta">URGENTE</span>
-            </div>
-          </div>
-
-          <div class="task-card done">
-            <div class="task-check"><span class="check-icon">✓</span></div>
-            <div class="task-info">
-              <span class="task-title">Recoge hierbas medicinales para el NPC médico</span>
-              <span class="task-category">💎 RECOLECCIÓN</span>
-              <span class="badge badge-media">NORMAL</span>
-            </div>
-          </div>
-
-          <div class="task-card done">
-            <div class="task-check"><span class="check-icon">✓</span></div>
-            <div class="task-info">
-              <span class="task-title">Escolta al NPC herido hasta el pueblo de inicio</span>
-              <span class="task-category">🧭 AVENTURA</span>
-              <span class="badge badge-baja">SECUNDARIA</span>
-            </div>
-          </div>
-
-        </div>
+      <!-- Misiones completadas -->
+      <section class="mb-10">
+        <h2 class="font-display text-[0.65rem] font-bold tracking-[4px] uppercase text-sao-accent mb-4 flex items-center gap-2 after:flex-1 after:h-px after:bg-gradient-to-r after:from-sao-border after:to-transparent">
+          MISIONES COMPLETADAS
+        </h2>
+        <div id="done-list" class="flex flex-col gap-2"></div>
       </section>
+
     </main>
   </div>
- <script src="app.js"></script>
+
+  <script src="app.js"></script>
 </body>
 </html>
