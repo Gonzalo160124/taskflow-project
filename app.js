@@ -118,9 +118,11 @@ function renderTasks(searchTerm = '') {
   doneList.innerHTML   = '';
 
   const normalizedSearch = searchTerm.trim().toLowerCase();
-  const filteredTasks = tasks.filter(task =>
-    task.text.toLowerCase().includes(normalizedSearch)
-  );
+  const filteredTasks = tasks.filter(task => {
+  const matchesSearch = task.text.toLowerCase().includes(normalizedSearch);
+  const matchesCategory = activeCategory ? task.category === activeCategory : true;
+  return matchesSearch && matchesCategory;
+  });
 
   filteredTasks.forEach(task => {
     const card = createCard(task);
@@ -177,6 +179,15 @@ function addTask() {
   taskInput.value = '';
 }
 
+// ── Filtro por categoría ──
+let activeCategory = null;
+
+function filterByCategory(category) {
+  activeCategory = activeCategory === category ? null : category;
+  updateCategoryStyles();
+  renderTasks(searchInput.value);
+}
+
 // ── Eventos ──
 addBtn.addEventListener('click', addTask);
 
@@ -187,6 +198,19 @@ taskInput.addEventListener('keydown', (e) => {
 searchInput.addEventListener('input', () => {
   renderTasks(searchInput.value);
 });
+
+// ── Actualizar estilos de categorías activas ──
+function updateCategoryStyles() {
+  document.querySelectorAll('.category-chip').forEach(chip => {
+    if (chip.dataset.category === activeCategory) {
+      chip.classList.add('border-sao-accent', 'text-sao-accent', 'bg-sao-accent/5');
+      chip.classList.remove('border-sao-border', 'text-sao-muted');
+    } else {
+      chip.classList.remove('border-sao-accent', 'text-sao-accent', 'bg-sao-accent/5');
+      chip.classList.add('border-sao-border', 'text-sao-muted');
+    }
+  });
+}
 
 // ── Inicio ──
 renderTasks();
