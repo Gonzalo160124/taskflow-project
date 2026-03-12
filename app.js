@@ -13,6 +13,39 @@ const countDone      = document.getElementById('count-done');
 // ── Cargar tareas desde LocalStorage ──
 let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
+// ── Stats del jugador ──
+let playerStats = JSON.parse(localStorage.getItem('playerStats')) || {
+  level: 80,
+  hp: 2400, hpMax: 3000,
+  mp: 880,  mpMax: 1000,
+  xp: 4500, xpMax: 9999
+};
+
+function saveStats() {
+  localStorage.setItem('playerStats', JSON.stringify(playerStats));
+}
+
+function updateStatsUI() {
+  document.getElementById('player-level').textContent = playerStats.level;
+  document.getElementById('hp-bar').style.width = `${(playerStats.hp / playerStats.hpMax) * 100}%`;
+  document.getElementById('hp-text').textContent = `${playerStats.hp}/${playerStats.hpMax}`;
+  document.getElementById('mp-bar').style.width = `${(playerStats.mp / playerStats.mpMax) * 100}%`;
+  document.getElementById('mp-text').textContent = `${playerStats.mp}/${playerStats.mpMax}`;
+  document.getElementById('xp-bar').style.width = `${(playerStats.xp / playerStats.xpMax) * 100}%`;
+  document.getElementById('xp-text').textContent = `${playerStats.xp}/${playerStats.xpMax}`;
+}
+
+function levelUp() {
+  playerStats.level += 1;
+  playerStats.hpMax += 100;
+  playerStats.hp = Math.min(playerStats.hp + 100, playerStats.hpMax);
+  playerStats.mpMax += 50;
+  playerStats.mp = Math.min(playerStats.mp + 50, playerStats.mpMax);
+  playerStats.xp = Math.min(playerStats.xp + 500, playerStats.xpMax);
+  saveStats();
+  updateStatsUI();
+}
+
 /**
  * Guarda el array de tareas en LocalStorage.
  * @returns {boolean} true si se guardó correctamente, false si ocurrió un error
@@ -96,9 +129,11 @@ function createCard(task) {
   `;
 
   card.querySelector('.task-check').addEventListener('click', () => {
-    task.done = !task.done;
-    saveToLocalStorage();
-    renderTasks();
+  const wasDone = task.done;
+  task.done = !task.done;
+  if (!wasDone && task.done) levelUp();
+  saveToLocalStorage();
+  renderTasks();
   });
 
   card.querySelector('.edit-btn').addEventListener('click', (e) => {
@@ -248,4 +283,5 @@ function updateCategoryStyles() {
 }
 
 // ── Inicio ──
+updateStatsUI();
 renderTasks();
