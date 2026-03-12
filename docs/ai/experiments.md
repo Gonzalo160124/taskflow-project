@@ -77,3 +77,101 @@ d. Guardar y verificar que el servidor aparece como conectado.
 - **Búsqueda inteligente:** Permite buscar patrones o usos específicos en todo el código del proyecto.
 - **Análisis de dependencias:** Facilita revisar el estado de las dependencias y detectar posibles problemas.
 - **Onboarding de nuevos desarrolladores:** Un nuevo desarrollador puede preguntar a la IA sobre la estructura del proyecto y obtener explicaciones detalladas al instante.
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Experimentos de programación con y sin IA
+
+# Problemas generales
+
+Problema 1 — Invertir una cadena de texto
+**Sin IA:** Resuelto en aproximadamente 2 minutos
+**Con IA:** Resuelto en segundos
+
+**Solución con IA:**
+```javascript
+function invertirCadena(texto) {
+  return texto.split('').reverse().join('');
+}
+```
+
+Problema 2 — Encontrar el número mayor de un array
+**Sin IA:** Resuelto en aproximadamente 2 minutos
+**Con IA:** Resuelto en segundos
+
+**Solución con IA:**
+```javascript
+function encontrarMayor(numeros) {
+  return Math.max(...numeros);
+}
+```
+
+Problema 3 — Contar las vocales de una frase
+**Sin IA:** Resuelto en aproximadamente 2 minutos
+**Con IA:** Resuelto en segundos
+
+**Solución con IA:**
+```javascript
+function contarVocales(frase) {
+  return (frase.toLowerCase().match(/[aeiouáéíóú]/g) || []).length;
+}
+```
+
+**Conclusión problemas generales:** Sin IA los 3 problemas llevaron unos 6 minutos en total. Con IA se resolvieron en segundos con soluciones limpias y bien estructuradas.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Problemas relacionados con TaskFlow
+
+Problema 4 — Contar tareas por categoría
+**Sin IA:** Más tiempo que los problemas generales
+**Con IA:** Resuelto en segundos
+
+**Solución con IA:**
+```javascript
+function contarPorCategoria() {
+  return tasks.reduce((acc, task) => {
+    acc[task.category] = (acc[task.category] || 0) + 1;
+    return acc;
+  }, {});
+}
+```
+
+Problema 5 — Ordenar tareas alfabéticamente
+**Sin IA:** Más tiempo que los problemas generales
+**Con IA:** Resuelto en segundos
+
+**Solución con IA:**
+```javascript
+function ordenarAlfabeticamente() {
+  return [...tasks].sort((a, b) => a.text.localeCompare(b.text));
+}
+```
+
+Problema 6 — Mostrar solo tareas urgentes
+**Sin IA:** Más tiempo que los problemas generales
+**Con IA:** Resuelto en segundos
+
+**Solución con IA:**
+```javascript
+function filtrarUrgentes() {
+  return tasks.filter(task => task.priority === 'urgente');
+}
+```
+
+**Conclusión problemas TaskFlow:** Los problemas relacionados con el proyecto fueron más difíciles sin IA porque requieren escribir lógica personalizada específica para la app que yo mismo estoy diseñando, algo que no se puede encontrar fácilmente buscandolo por Google o con libros sobre aprendizaje de código. Con IA el tiempo fue igualmente mínimo, debido a que tenemos la opción de pasar el código a la IA para que lo lea y analice antes de solucionar el problema. 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Conclusión general de experimentos
+
+| | Sin IA | Con IA |
+|---|---|---|
+| Problemas generales | ~6 minutos | Segundos |
+| Problemas TaskFlow | Más de 6 minutos | Segundos |
+| Calidad del código | Correcta | Correcta y más concisa |
+| Comprensión del problema | Alta | Alta |
+
+La IA reduce drásticamente el tiempo de resolución manteniendo o mejorando la calidad del código. Los problemas generales son más fáciles de resolver sin IA porque hay mucha documentación y ejemplos en internet. Sin embargo los problemas específicos del proyecto, que requieren lógica personalizada, son donde la IA marca una diferencia mayor ya que no existe una solución predefinida que buscar a no ser que la IA pueda analizar tu código.
