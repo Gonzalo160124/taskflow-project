@@ -86,6 +86,10 @@ function createCard(task) {
       <span class="font-display text-[0.6rem] text-sao-muted px-2 py-0.5 border border-sao-border bg-white/5 tracking-wide">${task.category}</span>
       <span class="font-display text-[0.6rem] font-bold tracking-widest px-2 py-0.5 uppercase ${badgeClass}">${badgeText}</span>
     </div>
+    <button class="edit-btn font-display text-[0.55rem] tracking-wide px-2 py-1 bg-transparent border border-sao-accent/20 text-sao-accent rounded cursor-pointer transition-all duration-300 hover:bg-sao-accent/15 hover:border-sao-accent focus:outline-none focus:ring-2 focus:ring-sao-accent/30 mr-1">
+      ✎ EDITAR
+    </button>
+    
     <button class="delete-btn font-display text-[0.55rem] tracking-wide px-2 py-1 bg-transparent border border-sao-red/20 text-sao-red rounded cursor-pointer transition-all duration-300 hover:bg-sao-red/15 hover:border-sao-red focus:outline-none focus:ring-2 focus:ring-sao-red/30">
       ✕ BORRAR
     </button>
@@ -93,6 +97,20 @@ function createCard(task) {
 
   card.querySelector('.task-check').addEventListener('click', () => {
     task.done = !task.done;
+    saveToLocalStorage();
+    renderTasks();
+  });
+
+  card.querySelector('.edit-btn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  const newText = prompt('Editar misión:', task.text);
+  if (newText === null) return;
+  const validation = validateTaskInput(newText);
+  if (!validation.valid) {
+    alert(validation.error);
+    return;
+    }
+    task.text = validation.text;
     saveToLocalStorage();
     renderTasks();
   });
