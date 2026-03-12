@@ -25,7 +25,7 @@
         <div class="w-8 h-8 rounded-full border-2 border-sao-accent bg-gradient-to-br from-sao-border to-sao-accent/20 flex items-center justify-center text-sm shadow-[0_0_10px_rgba(0,207,255,0.5)]">🛡️</div>
         <div>
           <div class="text-sao-text text-[0.75rem]">Gonzalo</div>
-          <div class="text-sao-yellow">LVL 80 · Tank</div>
+          <div class="text-sao-yellow">LVL <span id="player-level">80</span> · Tank</div>
         </div>
       </div>
       <div class="flex gap-2">
@@ -114,23 +114,23 @@
           <div class="flex items-center gap-2">
             <span class="font-display text-[0.6rem] font-bold tracking-wide w-8 text-sao-muted">HP</span>
             <div class="flex-1 h-1.5 bg-white/5 rounded border border-sao-border overflow-hidden">
-              <div class="h-full w-[72%] rounded" style="background: linear-gradient(90deg, #ff4e6a, #ff8fa0); box-shadow: 0 0 6px #ff4e6a;"></div>
+              <div id="hp-bar" class="h-full rounded" style="width: 72%; background: linear-gradient(90deg, #ff4e6a, #ff8fa0); box-shadow: 0 0 6px #ff4e6a;"></div>
             </div>
-            <span class="font-display text-[0.55rem] text-sao-muted w-14 text-right whitespace-nowrap">2400/3000</span>
+            <span id="hp-text" class="font-display text-[0.55rem] text-sao-muted w-14 text-right whitespace-nowrap">2400/3000</span>
           </div>
           <div class="flex items-center gap-2">
             <span class="font-display text-[0.6rem] font-bold tracking-wide w-8 text-sao-muted">MP</span>
             <div class="flex-1 h-1.5 bg-white/5 rounded border border-sao-border overflow-hidden">
-              <div class="h-full w-[88%] rounded" style="background: linear-gradient(90deg, #00cfff, #66e5ff); box-shadow: 0 0 6px #00cfff;"></div>
+              <div id="mp-bar" class="h-full rounded" style="width: 88%; background: linear-gradient(90deg, #00cfff, #66e5ff); box-shadow: 0 0 6px #00cfff;"></div>
             </div>
-            <span class="font-display text-[0.55rem] text-sao-muted w-14 text-right whitespace-nowrap">880/1000</span>
+            <span id="mp-text" class="font-display text-[0.55rem] text-sao-muted w-14 text-right whitespace-nowrap">880/1000</span>
           </div>
           <div class="flex items-center gap-2">
             <span class="font-display text-[0.6rem] font-bold tracking-wide w-8 text-sao-muted">XP</span>
             <div class="flex-1 h-1.5 bg-white/5 rounded border border-sao-border overflow-hidden">
-              <div class="h-full w-[45%] rounded" style="background: linear-gradient(90deg, #ffe066, #fff0a0); box-shadow: 0 0 6px #ffe066;"></div>
+              <div id="xp-bar" class="h-full rounded" style="width: 45%; background: linear-gradient(90deg, #ffe066, #fff0a0); box-shadow: 0 0 6px #ffe066;"></div>
             </div>
-            <span class="font-display text-[0.55rem] text-sao-muted w-14 text-right whitespace-nowrap">4500/9999</span>
+            <span id="xp-text" class="font-display text-[0.55rem] text-sao-muted w-14 text-right whitespace-nowrap">4500/9999</span>
           </div>
         </div>
       </div>
