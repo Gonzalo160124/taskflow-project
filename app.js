@@ -118,11 +118,15 @@ function renderTasks(searchTerm = '') {
   doneList.innerHTML   = '';
 
   const normalizedSearch = searchTerm.trim().toLowerCase();
-  const filteredTasks = tasks.filter(task => {
+  let filteredTasks = tasks.filter(task => {
   const matchesSearch = task.text.toLowerCase().includes(normalizedSearch);
   const matchesCategory = activeCategory ? task.category === activeCategory : true;
   return matchesSearch && matchesCategory;
   });
+
+if (sortByPriority) {
+  filteredTasks.sort((a, b) => PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority]);
+  }
 
   filteredTasks.forEach(task => {
     const card = createCard(task);
@@ -185,6 +189,19 @@ let activeCategory = null;
 function filterByCategory(category) {
   activeCategory = activeCategory === category ? null : category;
   updateCategoryStyles();
+  renderTasks(searchInput.value);
+}
+
+// ── Ordenar por prioridad ──
+let sortByPriority = false;
+const PRIORITY_ORDER = { urgente: 0, normal: 1, secundaria: 2 };
+
+function toggleSort() {
+  sortByPriority = !sortByPriority;
+  const btn = document.getElementById('sort-btn');
+  btn.textContent = sortByPriority ? 'PRIORIDAD ↑' : 'PRIORIDAD ↕';
+  btn.classList.toggle('border-sao-accent', sortByPriority);
+  btn.classList.toggle('text-sao-accent', sortByPriority);
   renderTasks(searchInput.value);
 }
 

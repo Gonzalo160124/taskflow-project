@@ -66,11 +66,20 @@
       + AÑADIR
     </button>
   </div>
-
+  
   <!-- Buscador -->
   <div class="px-10 py-3 bg-sao-bg/80 border-b border-sao-border">
     <input id="search-input" type="text" placeholder="🔍  Buscar misión..."
       class="w-full max-w-md bg-sao-accent/5 border border-sao-border rounded px-4 py-2 text-sao-text font-body text-[0.9rem] outline-none transition-all duration-300 hover:border-sao-accent focus:border-sao-accent focus:ring-2 focus:ring-sao-accent/30"/>
+  </div>
+
+  <!-- Ordenar por prioridad -->
+  <div class="px-10 py-2 bg-sao-bg/80 border-b border-sao-border flex gap-2 items-center">
+    <span class="font-display text-[0.6rem] text-sao-muted tracking-widest uppercase">Ordenar:</span>
+    <button onclick="toggleSort()" id="sort-btn"
+    class="font-display text-[0.6rem] font-bold tracking-widest uppercase px-3 py-1 bg-transparent border border-sao-border text-sao-muted rounded cursor-pointer transition-all duration-300 hover:border-sao-accent hover:text-sao-accent">
+    PRIORIDAD ↕
+    </button>
   </div>
 
   <div class="flex flex-1">
@@ -129,10 +138,10 @@
       <div>
         <h3 class="font-display text-[0.6rem] font-bold tracking-[3px] uppercase text-sao-muted mb-2 border-b border-sao-border pb-2">// CATEGORÍAS</h3>
         <div class="flex flex-wrap gap-1 mt-1">
-          <span class="inline-flex gap-1 px-2 py-1 rounded text-[0.75rem] font-display border border-sao-border text-sao-muted cursor-pointer tracking-wide transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/5">⚔️ Boss Fight</span>
-          <span class="inline-flex gap-1 px-2 py-1 rounded text-[0.75rem] font-display border border-sao-border text-sao-muted cursor-pointer tracking-wide transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/5">💎 Recolección</span>
-          <span class="inline-flex gap-1 px-2 py-1 rounded text-[0.75rem] font-display border border-sao-border text-sao-muted cursor-pointer tracking-wide transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/5">🔬 Investigación</span>
-          <span class="inline-flex gap-1 px-2 py-1 rounded text-[0.75rem] font-display border border-sao-border text-sao-muted cursor-pointer tracking-wide transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/5">🧭 Aventura</span>
+          <span onclick="filterByCategory('⚔️ BOSS FIGHT')" class="inline-flex gap-1 px-2 py-1 rounded text-[0.75rem] font-display border border-sao-border text-sao-muted cursor-pointer tracking-wide transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/5 category-chip" data-category="⚔️ BOSS FIGHT">⚔️ Boss Fight</span>
+          <span onclick="filterByCategory('💎 RECOLECCIÓN')" class="inline-flex gap-1 px-2 py-1 rounded text-[0.75rem] font-display border border-sao-border text-sao-muted cursor-pointer tracking-wide transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/5 category-chip" data-category="💎 RECOLECCIÓN">💎 Recolección</span>
+          <span onclick="filterByCategory('🔬 INVESTIGACIÓN')" class="inline-flex gap-1 px-2 py-1 rounded text-[0.75rem] font-display border border-sao-border text-sao-muted cursor-pointer tracking-wide transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/5 category-chip" data-category="🔬 INVESTIGACIÓN">🔬 Investigación</span>
+          <span onclick="filterByCategory('🧭 AVENTURA')" class="inline-flex gap-1 px-2 py-1 rounded text-[0.75rem] font-display border border-sao-border text-sao-muted cursor-pointer tracking-wide transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/5 category-chip" data-category="🧭 AVENTURA">🧭 Aventura</span>
         </div>
       </div>
 
