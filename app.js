@@ -86,7 +86,7 @@ const PRIORITY_STYLES = {
   secundaria:  { class: 'bg-sao-accent/10 text-sao-accent border border-sao-accent/25', label: 'SECUNDARIA' }
 };
 
-const BASE_CARD_CLASS = 'relative flex items-center gap-4 bg-sao-surface/70 rounded px-6 py-4 cursor-pointer transition-all duration-300';
+const BASE_CARD_CLASS = 'relative flex flex-wrap items-center gap-4 bg-sao-surface/70 rounded px-6 py-4 cursor-pointer transition-all duration-300';
 const CARD_CLASS_DONE = 'border border-transparent opacity-40';
 const CARD_CLASS_ACTIVE = 'border border-sao-border hover:border-sao-accent hover:bg-sao-accent/5 hover:translate-x-1 hover:shadow-[0_0_20px_rgba(0,207,255,0.15)]';
 
@@ -284,4 +284,10 @@ function updateCategoryStyles() {
 
 // ── Inicio ──
 updateStatsUI();
+
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.toggle('hidden');
+}
+
 renderTasks();

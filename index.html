@@ -28,16 +28,20 @@
           <div class="text-sao-yellow">LVL <span id="player-level">80</span> · Tank</div>
         </div>
       </div>
+        <button id="menu-btn" onclick="toggleSidebar()"
+          class="md:hidden font-display text-[0.65rem] font-bold tracking-widest uppercase px-4 py-2 rounded border border-sao-border bg-transparent text-sao-muted cursor-pointer transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/10 focus:outline-none focus:ring-2 focus:ring-sao-accent">
+          ☰
+        </button>
       <div class="flex gap-2">
         <!-- Botón modo oscuro -->
         <button id="theme-toggle" onclick="document.documentElement.classList.toggle('dark')"
           class="font-display text-[0.65rem] font-bold tracking-widest uppercase px-4 py-2 rounded border border-sao-border bg-transparent text-sao-muted cursor-pointer transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/10 hover:shadow-[0_0_15px_rgba(0,207,255,0.3)] focus:outline-none focus:ring-2 focus:ring-sao-accent">
           🌙 TEMA
         </button>
-        <button class="font-display text-[0.65rem] font-bold tracking-widest uppercase px-4 py-2 rounded border border-sao-border bg-transparent text-sao-muted cursor-pointer transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/10 hover:shadow-[0_0_15px_rgba(0,207,255,0.3)] focus:outline-none focus:ring-2 focus:ring-sao-accent">
+        <button class="hidden md:block font-display text-[0.65rem] font-bold tracking-widest uppercase px-4 py-2 rounded border border-sao-border bg-transparent text-sao-muted cursor-pointer transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/10 hover:shadow-[0_0_15px_rgba(0,207,255,0.3)] focus:outline-none focus:ring-2 focus:ring-sao-accent">
           ATRIBUTOS
         </button>
-        <button class="font-display text-[0.65rem] font-bold tracking-widest uppercase px-4 py-2 rounded border border-sao-accent bg-sao-accent/10 text-sao-accent cursor-pointer transition-all duration-300 hover:bg-sao-accent/25 hover:shadow-[0_0_25px_rgba(0,207,255,0.5)] focus:outline-none focus:ring-2 focus:ring-sao-accent">
+        <button class="hidden md:block font-display text-[0.65rem] font-bold tracking-widest uppercase px-4 py-2 rounded border border-sao-accent bg-sao-accent/10 text-sao-accent cursor-pointer transition-all duration-300 hover:bg-sao-accent/25 hover:shadow-[0_0_25px_rgba(0,207,255,0.5)] focus:outline-none focus:ring-2 focus:ring-sao-accent">
           NUEVA MISIÓN
         </button>
       </div>
@@ -85,7 +89,7 @@
   <div class="flex flex-1">
 
     <!-- ── ASIDE ── -->
-    <aside class="w-56 min-w-[230px] bg-sao-surface/80 border-r border-sao-border px-4 py-6 flex flex-col gap-6">
+    <aside id="sidebar" class="w-56 min-w-[230px] bg-sao-surface/80 border-r border-sao-border px-4 py-6 flex-col gap-6 hidden md:flex">
 
       <div>
         <h3 class="font-display text-[0.6rem] font-bold tracking-[3px] uppercase text-sao-muted mb-2 border-b border-sao-border pb-2">// MENÚ</h3>
@@ -157,7 +161,7 @@
             MIS <em class="not-italic text-sao-accent" style="text-shadow: 0 0 20px rgba(0,207,255,1)">MISIONES</em>
           </h1>
         </div>
-        <div class="flex gap-4">
+        <div class="flex gap-4 overflow-x-auto">
           <div class="bg-sao-surface/80 border border-sao-border rounded px-4 py-2 text-center min-w-[70px]">
             <div id="count-total" class="font-display text-2xl font-black text-sao-accent" style="text-shadow: 0 0 15px rgba(0,207,255,0.8)">0</div>
             <div class="font-display text-[0.55rem] text-sao-muted uppercase tracking-wide">Total</div>
@@ -193,5 +197,19 @@
   </div>
 
   <script src="app.js"></script>
+    <style>
+     @media (max-width: 768px) {
+      #sidebar.open {
+        display: flex !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 230px;
+        height: 100vh;
+        z-index: 100;
+        overflow-y: auto;
+      }
+    }
+    </style>
 </body>
 </html>

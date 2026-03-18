@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Mi primer proyecto de practicas.",
   "main": "app.js",
-  "scripts": {
+ "scripts": {
+    "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +20,15 @@
   },
   "homepage": "https://github.com/Gonzalo160124/taskflow-project#readme",
   "devDependencies": {
+    "nodemon": "^3.1.14",
     "tailwindcss": "^4.2.1"
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1"
   }
 }
