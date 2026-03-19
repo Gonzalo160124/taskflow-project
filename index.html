@@ -16,7 +16,7 @@
   <div class="fixed inset-0 pointer-events-none" style="background-image: linear-gradient(rgba(0,207,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,207,255,0.03) 1px, transparent 1px); background-size: 40px 40px;"></div>
 
   <!-- ── HEADER ── -->
-  <header class="flex items-center justify-between px-10 py-4 border-b border-sao-border bg-sao-surface/95 backdrop-blur sticky top-0 z-10 shadow-[0_0_30px_rgba(0,207,255,0.1)]">
+  <header class="flex items-center justify-between px-4 md:px-10 py-4 border-b border-sao-border bg-sao-surface/95 backdrop-blur sticky top-0 z-10 shadow-[0_0_30px_rgba(0,207,255,0.1)]">
     <div class="font-display font-black text-xl tracking-widest uppercase text-sao-accent" style="text-shadow: 0 0 20px rgba(0,207,255,0.8)">
       TASK<span class="text-white">FLOW</span> ONLINE
     </div>
@@ -198,6 +198,11 @@
 
   <script src="app.js"></script>
     <style>
+      * {
+    box-sizing: border-box;
+    }
+    body {
+    overflow-x: hidden; }
      @media (max-width: 768px) {
       #sidebar.open {
         display: flex !important;
