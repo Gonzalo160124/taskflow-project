@@ -46,6 +46,18 @@ function levelUp() {
   updateStatsUI();
 }
 
+function levelDown() {
+  if (playerStats.level <= 1) return;
+  playerStats.level -= 1;
+  playerStats.hpMax -= 100;
+  playerStats.hp = Math.min(playerStats.hp, playerStats.hpMax);
+  playerStats.mpMax -= 50;
+  playerStats.mp = Math.min(playerStats.mp, playerStats.mpMax);
+  playerStats.xp = Math.max(playerStats.xp - 500, 0);
+  saveStats();
+  updateStatsUI();
+}
+
 /**
  * Guarda el array de tareas en LocalStorage.
  * @returns {boolean} true si se guardó correctamente, false si ocurrió un error
@@ -86,7 +98,7 @@ const PRIORITY_STYLES = {
   secundaria:  { class: 'bg-sao-accent/10 text-sao-accent border border-sao-accent/25', label: 'SECUNDARIA' }
 };
 
-const BASE_CARD_CLASS = 'relative flex items-center gap-4 bg-sao-surface/70 rounded px-6 py-4 cursor-pointer transition-all duration-300';
+const BASE_CARD_CLASS = 'relative flex flex-wrap items-center gap-4 bg-sao-surface/70 rounded px-6 py-4 cursor-pointer transition-all duration-300';
 const CARD_CLASS_DONE = 'border border-transparent opacity-40';
 const CARD_CLASS_ACTIVE = 'border border-sao-border hover:border-sao-accent hover:bg-sao-accent/5 hover:translate-x-1 hover:shadow-[0_0_20px_rgba(0,207,255,0.15)]';
 
@@ -128,10 +140,11 @@ function createCard(task) {
     </button>
   `;
 
-  card.querySelector('.task-check').addEventListener('click', () => {
+ card.querySelector('.task-check').addEventListener('click', () => {
   const wasDone = task.done;
   task.done = !task.done;
   if (!wasDone && task.done) levelUp();
+  if (wasDone && !task.done) levelDown();
   saveToLocalStorage();
   renderTasks();
   });
@@ -284,4 +297,10 @@ function updateCategoryStyles() {
 
 // ── Inicio ──
 updateStatsUI();
+
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.toggle('hidden');
+}
+
 renderTasks();
