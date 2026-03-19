@@ -46,6 +46,18 @@ function levelUp() {
   updateStatsUI();
 }
 
+function levelDown() {
+  if (playerStats.level <= 1) return;
+  playerStats.level -= 1;
+  playerStats.hpMax -= 100;
+  playerStats.hp = Math.min(playerStats.hp, playerStats.hpMax);
+  playerStats.mpMax -= 50;
+  playerStats.mp = Math.min(playerStats.mp, playerStats.mpMax);
+  playerStats.xp = Math.max(playerStats.xp - 500, 0);
+  saveStats();
+  updateStatsUI();
+}
+
 /**
  * Guarda el array de tareas en LocalStorage.
  * @returns {boolean} true si se guardó correctamente, false si ocurrió un error
@@ -128,10 +140,11 @@ function createCard(task) {
     </button>
   `;
 
-  card.querySelector('.task-check').addEventListener('click', () => {
+ card.querySelector('.task-check').addEventListener('click', () => {
   const wasDone = task.done;
   task.done = !task.done;
   if (!wasDone && task.done) levelUp();
+  if (wasDone && !task.done) levelDown();
   saveToLocalStorage();
   renderTasks();
   });
