@@ -17,6 +17,15 @@ app.get('/', (req, res) => {
   res.json({ message: 'TaskFlow API funcionando correctamente' });
 });
 
+// ── Middleware global de manejo de errores ──
+app.use((err, req, res, next) => {
+  if (err.message === 'NOT_FOUND') {
+    return res.status(404).json({ error: 'Recurso no encontrado.' });
+  }
+  console.error(err);
+  res.status(500).json({ error: 'Error interno del servidor.' });
+});
+
 // ── Arrancar servidor ──
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
