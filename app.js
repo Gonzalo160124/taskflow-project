@@ -291,6 +291,31 @@ function updateCategoryStyles() {
   });
 }
 
+// ── Completar todas las misiones activas ──
+async function completeAll() {
+  tasks.forEach(task => {
+    if (!task.done) {
+      task.done = true;
+      levelUp();
+    }
+  });
+  renderTasks();
+}
+
+// ── Borrar todas las misiones completadas ──
+async function clearCompleted() {
+  const completadas = tasks.filter(t => t.done);
+  for (const task of completadas) {
+    try {
+      await deleteTask(task.id);
+    } catch (error) {
+      console.error('Error al borrar tarea:', error.message);
+    }
+  }
+  tasks = tasks.filter(t => !t.done);
+  renderTasks();
+}
+
 // ── Eventos ──
 addBtn.addEventListener('click', addTask);
 taskInput.addEventListener('keydown', (e) => {

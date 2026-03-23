@@ -173,7 +173,17 @@
           <div class="bg-sao-surface/80 border border-sao-border rounded px-2 md:px-4 py-2 text-center min-w-[60px]">
           <div id="count-done" class="font-display text-xl md:text-2xl font-black text-sao-accent" style="text-shadow: 0 0 15px rgba(0,207,255,0.8)">0</div>
           <div class="font-display text-[0.55rem] text-sao-muted uppercase tracking-wide">Done</div>
+          </div>
         </div>
+        <div class="flex gap-2 mt-4 md:mt-0 md:flex-col">
+        <button onclick="completeAll()"
+        class="font-display text-[0.55rem] font-bold tracking-widest uppercase px-3 py-2 bg-transparent border border-sao-accent/30 text-sao-accent rounded cursor-pointer transition-all duration-300 hover:bg-sao-accent/15 hover:border-sao-accent whitespace-nowrap">
+        ✓ COMPLETAR TODO
+        </button>
+        <button onclick="clearCompleted()"
+        class="font-display text-[0.55rem] font-bold tracking-widest uppercase px-3 py-2 bg-transparent border border-sao-red/30 text-sao-red rounded cursor-pointer transition-all duration-300 hover:bg-sao-red/15 hover:border-sao-red whitespace-nowrap">
+        ✕ BORRAR COMPLETADAS
+        </button>
         </div>
       </div>
 
