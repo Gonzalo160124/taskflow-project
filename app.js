@@ -1,3 +1,32 @@
+// ── API Client ──
+const API_URL = 'https://taskflow-project-3fn1.vercel.app/api/v1/tasks';
+
+async function getTasks() {
+  const response = await fetch(API_URL);
+  if (!response.ok) throw new Error('Error al obtener las tareas.');
+  return response.json();
+}
+
+async function createTask(task) {
+  const response = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(task)
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error);
+  }
+  return response.json();
+}
+
+async function deleteTask(id) {
+  const response = await fetch(`${API_URL}/${id}`, {
+    method: 'DELETE'
+  });
+  if (!response.ok) throw new Error('Error al eliminar la tarea.');
+}
+
 // ── Elementos del DOM ──
 const taskInput      = document.getElementById('task-input');
 const categorySelect = document.getElementById('task-category');
