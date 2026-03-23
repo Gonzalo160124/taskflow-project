@@ -198,25 +198,31 @@
   
   
 
-  <script src="app.js"></script>
-    <style>
-      * {
+<script src="app.js"></script>
+<style>
+  * {
     box-sizing: border-box;
+  }
+  body {
+    overflow-x: hidden;
+  }
+  @media (min-width: 1024px) {
+    #sidebar {
+      display: flex !important;
     }
-    body {
-    overflow-x: hidden; }
-     @media (max-width: 1024px) {
-      #sidebar.open {
-        display: flex !important;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 230px;
-        height: 100vh;
-        z-index: 100;
-        overflow-y: auto;
-      }
+  }
+  @media (max-width: 1024px) {
+    #sidebar.open {
+      display: flex !important;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 230px;
+      height: 100vh;
+      z-index: 100;
+      overflow-y: auto;
     }
-    </style>
+  }
+</style>
 </body>
 </html>
