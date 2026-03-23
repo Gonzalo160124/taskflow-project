@@ -29,7 +29,7 @@
         </div>
       </div>
         <button id="menu-btn" onclick="toggleSidebar()"
-          class="md:hidden font-display text-[0.65rem] font-bold tracking-widest uppercase px-4 py-2 rounded border border-sao-border bg-transparent text-sao-muted cursor-pointer transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/10 focus:outline-none focus:ring-2 focus:ring-sao-accent">
+          class="lg:hidden font-display text-[0.65rem] font-bold tracking-widest uppercase px-4 py-2 rounded border border-sao-border bg-transparent text-sao-muted cursor-pointer transition-all duration-300 hover:border-sao-accent hover:text-sao-accent hover:bg-sao-accent/10 focus:outline-none focus:ring-2 focus:ring-sao-accent">
           ☰
         </button>
       <div class="flex gap-2">
@@ -89,7 +89,7 @@
   <div class="flex flex-1 relative">
 
     <!-- ── ASIDE ── -->
-    <aside id="sidebar" class="w-56 min-w-[230px] bg-sao-surface/80 border-r border-sao-border px-4 py-6 flex-col gap-6 hidden md:flex">
+    <aside id="sidebar" class="w-56 min-w-[230px] bg-sao-surface/80 border-r border-sao-border px-4 py-6 flex-col gap-6 hidden lg:flex">
 
       <div>
         <h3 class="font-display text-[0.6rem] font-bold tracking-[3px] uppercase text-sao-muted mb-2 border-b border-sao-border pb-2">// MENÚ</h3>
@@ -205,7 +205,7 @@
     }
     body {
     overflow-x: hidden; }
-     @media (max-width: 768px) {
+     @media (max-width: 1024px) {
       #sidebar.open {
         display: flex !important;
         position: fixed;
