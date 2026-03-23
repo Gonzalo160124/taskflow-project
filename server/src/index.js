@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 const { PORT } = require('./config/env');
 const taskRoutes = require('./routes/task.routes');
 
@@ -8,6 +10,9 @@ const app = express();
 // ── Middlewares globales ──
 app.use(cors());
 app.use(express.json());
+
+// ── Documentación Swagger ──
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // ── Rutas ──
 app.use('/api/v1/tasks', taskRoutes);
@@ -29,4 +34,5 @@ app.use((err, req, res, next) => {
 // ── Arrancar servidor ──
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
+  console.log(`Documentación Swagger en http://localhost:${PORT}/api/docs`);
 });
