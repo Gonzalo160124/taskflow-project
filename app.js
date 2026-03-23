@@ -10,8 +10,8 @@ const countTotal     = document.getElementById('count-total');
 const countActive    = document.getElementById('count-active');
 const countDone      = document.getElementById('count-done');
 
-// ── Cargar tareas desde LocalStorage ──
-let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+// ── Estado de la app ──
+let tasks = [];
 
 // ── Stats del jugador ──
 let playerStats = JSON.parse(localStorage.getItem('playerStats')) || {
@@ -58,68 +58,46 @@ function levelDown() {
   updateStatsUI();
 }
 
-/**
- * Guarda el array de tareas en LocalStorage.
- * @returns {boolean} true si se guardó correctamente, false si ocurrió un error
- */
-function saveToLocalStorage() {
-  try {
-    const serialized = JSON.stringify(tasks);
-    localStorage.setItem('tasks', serialized);
-    return true;
-  } catch (error) {
-    if (error.name === 'QuotaExceededError') {
-      console.error('LocalStorage lleno: no se puede guardar más datos.');
-    } else {
-      console.error('Error al guardar tareas:', error.message);
-    }
-    return false;
-  }
+// ── UI de estados de red ──
+function showLoading() {
+  activeList.innerHTML = '<div class="text-sao-muted font-display text-[0.8rem] tracking-widest animate-pulse">// CARGANDO MISIONES...</div>';
+  doneList.innerHTML = '';
 }
 
-/**
- * Actualiza los contadores de tareas en el DOM (total, activas y completadas).
- * @returns {void}
- */
-function updateCounters() {
-  const totalCount    = tasks.length;
-  const completedCount = tasks.filter(task => task.done).length;
-  const activeCount   = tasks.filter(task => !task.done).length;
+function showError(message) {
+  activeList.innerHTML = `<div class="text-sao-red font-display text-[0.8rem] tracking-widest">// ERROR: ${message}</div>`;
+}
 
+// ── Contadores ──
+function updateCounters() {
+  const totalCount     = tasks.length;
+  const completedCount = tasks.filter(task => task.done).length;
+  const activeCount    = tasks.filter(task => !task.done).length;
   countTotal.textContent  = totalCount;
   countActive.textContent = activeCount;
   countDone.textContent   = completedCount;
 }
 
-// ── Estilos de prioridad (mapeo simplificado) ──
+// ── Estilos de prioridad ──
 const PRIORITY_STYLES = {
-  urgente:     { class: 'bg-sao-red/15 text-sao-red border border-sao-red/40', label: 'URGENTE' },
-  normal:      { class: 'bg-sao-yellow/10 text-sao-yellow border border-sao-yellow/30', label: 'NORMAL' },
-  secundaria:  { class: 'bg-sao-accent/10 text-sao-accent border border-sao-accent/25', label: 'SECUNDARIA' }
+  urgente:    { class: 'bg-sao-red/15 text-sao-red border border-sao-red/40', label: 'URGENTE' },
+  normal:     { class: 'bg-sao-yellow/10 text-sao-yellow border border-sao-yellow/30', label: 'NORMAL' },
+  secundaria: { class: 'bg-sao-accent/10 text-sao-accent border border-sao-accent/25', label: 'SECUNDARIA' }
 };
 
 const BASE_CARD_CLASS = 'relative flex flex-wrap items-center gap-4 bg-sao-surface/70 rounded px-6 py-4 cursor-pointer transition-all duration-300';
 const CARD_CLASS_DONE = 'border border-transparent opacity-40';
 const CARD_CLASS_ACTIVE = 'border border-sao-border hover:border-sao-accent hover:bg-sao-accent/5 hover:translate-x-1 hover:shadow-[0_0_20px_rgba(0,207,255,0.15)]';
 
-/**
- * Crea un elemento DOM con el HTML de una tarjeta de tarea.
- * @param {Object} task - Objeto de la tarea
- * @param {number} task.id - Identificador único
- * @param {string} task.text - Texto de la misión
- * @param {string} task.category - Categoría de la tarea
- * @param {string} task.priority - Prioridad (urgente, normal, secundaria)
- * @param {boolean} task.done - Si está completada
- * @returns {HTMLDivElement} Elemento div con la tarjeta renderizada y sus event listeners
- */
+// ── Crear tarjeta ──
 function createCard(task) {
   const card = document.createElement('div');
-  card.dataset.id = task.id;
+  card.dataset.id = String(task.id);
 
-  const { class: badgeClass, label: badgeText } = PRIORITY_STYLES[task.priority] ?? PRIORITY_STYLES.secundaria;
-  const checkClass = task.done ? 'bg-sao-accent border-sao-accent' : 'border-sao-border';
-  const titleClass = task.done ? 'line-through text-sao-muted' : '';
-  const cardClass = `${BASE_CARD_CLASS} ${task.done ? CARD_CLASS_DONE : CARD_CLASS_ACTIVE}`;
+  const { class: badgeClass, label: badgeText } = PRIORITY_STYLES[task.prioridad] ?? PRIORITY_STYLES.secundaria;
+  const checkClass  = task.done ? 'bg-sao-accent border-sao-accent' : 'border-sao-border';
+  const titleClass  = task.done ? 'line-through text-sao-muted' : '';
+  const cardClass   = `${BASE_CARD_CLASS} ${task.done ? CARD_CLASS_DONE : CARD_CLASS_ACTIVE}`;
 
   card.className = cardClass;
   card.innerHTML = `
@@ -127,71 +105,70 @@ function createCard(task) {
       <span class="${task.done ? '' : 'hidden'}">✓</span>
     </div>
     <div class="flex-1 flex items-center gap-4 flex-wrap">
-      <span class="task-title font-semibold text-[0.95rem] tracking-wide ${titleClass}">${task.text}</span>
-      <span class="font-display text-[0.6rem] text-sao-muted px-2 py-0.5 border border-sao-border bg-white/5 tracking-wide">${task.category}</span>
+      <span class="task-title font-semibold text-[0.95rem] tracking-wide ${titleClass}">${task.texto}</span>
+      <span class="font-display text-[0.6rem] text-sao-muted px-2 py-0.5 border border-sao-border bg-white/5 tracking-wide">${task.categoria}</span>
       <span class="font-display text-[0.6rem] font-bold tracking-widest px-2 py-0.5 uppercase ${badgeClass}">${badgeText}</span>
     </div>
     <button class="edit-btn font-display text-[0.55rem] tracking-wide px-2 py-1 bg-transparent border border-sao-accent/20 text-sao-accent rounded cursor-pointer transition-all duration-300 hover:bg-sao-accent/15 hover:border-sao-accent focus:outline-none focus:ring-2 focus:ring-sao-accent/30 mr-1">
       ✎ EDITAR
     </button>
-    
     <button class="delete-btn font-display text-[0.55rem] tracking-wide px-2 py-1 bg-transparent border border-sao-red/20 text-sao-red rounded cursor-pointer transition-all duration-300 hover:bg-sao-red/15 hover:border-sao-red focus:outline-none focus:ring-2 focus:ring-sao-red/30">
       ✕ BORRAR
     </button>
   `;
 
- card.querySelector('.task-check').addEventListener('click', () => {
-  const wasDone = task.done;
-  task.done = !task.done;
-  if (!wasDone && task.done) levelUp();
-  if (wasDone && !task.done) levelDown();
-  saveToLocalStorage();
-  renderTasks();
+  card.querySelector('.task-check').addEventListener('click', () => {
+    const wasDone = task.done;
+    task.done = !task.done;
+    if (!wasDone && task.done) levelUp();
+    if (wasDone && !task.done) levelDown();
+    renderTasks();
   });
 
   card.querySelector('.edit-btn').addEventListener('click', (e) => {
-  e.stopPropagation();
-  const newText = prompt('Editar misión:', task.text);
-  if (newText === null) return;
-  const validation = validateTaskInput(newText);
-  if (!validation.valid) {
-    alert(validation.error);
-    return;
+    e.stopPropagation();
+    const newText = prompt('Editar misión:', task.texto);
+    if (newText === null) return;
+    if (newText.trim().length < 3) {
+      alert('La misión debe tener al menos 3 caracteres.');
+      return;
     }
-    task.text = validation.text;
-    saveToLocalStorage();
+    task.texto = newText.trim();
     renderTasks();
   });
 
-  card.querySelector('.delete-btn').addEventListener('click', (e) => {
+  card.querySelector('.delete-btn').addEventListener('click', async (e) => {
     e.stopPropagation();
-    tasks = tasks.filter(t => t.id !== task.id);
-    saveToLocalStorage();
-    renderTasks();
+    try {
+      await deleteTask(task.id);
+      tasks = tasks.filter(t => t.id !== task.id);
+      renderTasks();
+    } catch (error) {
+      alert('Error al eliminar la tarea: ' + error.message);
+    }
   });
 
   return card;
 }
 
-/**
- * Renderiza la lista de tareas filtrando por término de búsqueda.
- * Separa las tareas en listas activas y completadas, y actualiza los contadores.
- * @param {string} [searchTerm=''] - Término para filtrar las tareas por texto
- * @returns {void}
- */
+// ── Renderizar tareas ──
+let activeCategory = null;
+let sortByPriority = false;
+const PRIORITY_ORDER = { urgente: 0, normal: 1, secundaria: 2 };
+
 function renderTasks(searchTerm = '') {
   activeList.innerHTML = '';
   doneList.innerHTML   = '';
 
   const normalizedSearch = searchTerm.trim().toLowerCase();
   let filteredTasks = tasks.filter(task => {
-  const matchesSearch = task.text.toLowerCase().includes(normalizedSearch);
-  const matchesCategory = activeCategory ? task.category === activeCategory : true;
-  return matchesSearch && matchesCategory;
+    const matchesSearch   = task.texto.toLowerCase().includes(normalizedSearch);
+    const matchesCategory = activeCategory ? task.categoria === activeCategory : true;
+    return matchesSearch && matchesCategory;
   });
 
-if (sortByPriority) {
-  filteredTasks.sort((a, b) => PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority]);
+  if (sortByPriority) {
+    filteredTasks.sort((a, b) => PRIORITY_ORDER[a.prioridad] - PRIORITY_ORDER[b.prioridad]);
   }
 
   filteredTasks.forEach(task => {
@@ -206,52 +183,50 @@ if (sortByPriority) {
   updateCounters();
 }
 
-/**
- * Valida el texto introducido para una nueva misión.
- * Comprueba que no esté vacío, tenga al menos 3 caracteres y no sea duplicada.
- * @param {string} text - Texto introducido por el usuario
- * @returns {{ valid: boolean, error?: string, text?: string }} Objeto con valid (boolean),
- *   error (mensaje si no es válida) o text (texto limpio si es válida)
- */
+// ── Validar input ──
 function validateTaskInput(text) {
   const trimmed = text.trim();
   if (!trimmed) return { valid: false, error: 'El nombre de la misión no puede estar vacío.' };
   if (trimmed.length < 3) return { valid: false, error: 'La misión debe tener al menos 3 caracteres.' };
-  const isDuplicate = tasks.some(t => t.text.trim().toLowerCase() === trimmed.toLowerCase());
+  const isDuplicate = tasks.some(t => t.texto.trim().toLowerCase() === trimmed.toLowerCase());
   if (isDuplicate) return { valid: false, error: 'Ya existe una misión con ese nombre.' };
   return { valid: true, text: trimmed };
 }
 
-/**
- * Añade una nueva tarea a la lista tras validar el formulario.
- * Lee los valores del input, categoría y prioridad. Si la validación falla,
- * muestra un alert y no añade la tarea.
- * @returns {void}
- */
-function addTask() {
+// ── Añadir tarea ──
+async function addTask() {
   const validation = validateTaskInput(taskInput.value);
   if (!validation.valid) {
     alert(validation.error);
     return;
   }
 
-  const newTask = {
-    id:       Date.now(),
-    text:     validation.text,
-    category: categorySelect.value,
-    priority: prioritySelect.value,
-    done:     false
-  };
+  try {
+    const newTask = await createTask({
+      texto:     validation.text,
+      categoria: categorySelect.value,
+      prioridad: prioritySelect.value
+    });
+    tasks.push(newTask);
+    renderTasks();
+    taskInput.value = '';
+  } catch (error) {
+    alert('Error al crear la tarea: ' + error.message);
+  }
+}
 
-  tasks.push(newTask);
-  saveToLocalStorage();
-  renderTasks();
-  taskInput.value = '';
+// ── Cargar tareas al inicio ──
+async function loadTasks() {
+  showLoading();
+  try {
+    tasks = await getTasks();
+    renderTasks();
+  } catch (error) {
+    showError('No se puede conectar con el servidor.');
+  }
 }
 
 // ── Filtro por categoría ──
-let activeCategory = null;
-
 function filterByCategory(category) {
   activeCategory = activeCategory === category ? null : category;
   updateCategoryStyles();
@@ -259,9 +234,6 @@ function filterByCategory(category) {
 }
 
 // ── Ordenar por prioridad ──
-let sortByPriority = false;
-const PRIORITY_ORDER = { urgente: 0, normal: 1, secundaria: 2 };
-
 function toggleSort() {
   sortByPriority = !sortByPriority;
   const btn = document.getElementById('sort-btn');
@@ -271,18 +243,13 @@ function toggleSort() {
   renderTasks(searchInput.value);
 }
 
-// ── Eventos ──
-addBtn.addEventListener('click', addTask);
+// ── Toggle sidebar móvil ──
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.toggle('open');
+}
 
-taskInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') addTask();
-});
-
-searchInput.addEventListener('input', () => {
-  renderTasks(searchInput.value);
-});
-
-// ── Actualizar estilos de categorías activas ──
+// ── Actualizar estilos de categorías ──
 function updateCategoryStyles() {
   document.querySelectorAll('.category-chip').forEach(chip => {
     if (chip.dataset.category === activeCategory) {
@@ -295,12 +262,15 @@ function updateCategoryStyles() {
   });
 }
 
+// ── Eventos ──
+addBtn.addEventListener('click', addTask);
+taskInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') addTask();
+});
+searchInput.addEventListener('input', () => {
+  renderTasks(searchInput.value);
+});
+
 // ── Inicio ──
 updateStatsUI();
-
-function toggleSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  sidebar.classList.toggle('hidden');
-}
-
-renderTasks();
+loadTasks();
