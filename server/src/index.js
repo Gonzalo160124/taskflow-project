@@ -8,7 +8,9 @@ const taskRoutes = require('./routes/task.routes');
 const app = express();
 
 // ── Middlewares globales ──
-app.use(cors());
+app.use(cors({
+  origin: 'https://taskflow-project-beige.vercel.app'
+}));
 app.use(express.json());
 
 // ── Documentación Swagger ──
