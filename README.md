@@ -5,7 +5,7 @@
 
 Aplicación web de gestión de tareas con temática de **Sword Art Online**. Organiza tus misiones, sube de nivel y mejora tus stats completando tareas.
 
-🌐 **Demo en vivo:** [taskflow-project-beige.vercel.app](https://taskflow-project-beige.vercel.app)
+🌐 **Enlace:** [taskflow-project-beige.vercel.app](https://taskflow-project-beige.vercel.app)
 
 ---
 
